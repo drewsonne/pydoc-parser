@@ -1,0 +1,1 @@
+class DocParser(object): pass
