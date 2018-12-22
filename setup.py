@@ -15,7 +15,12 @@ setup(
     author='Drew J. Sonne',
     author_email='drew.sonne@gmail.com',
     description='A python library to parse doc blocks from python modules',
-    install_requires=[],
+    install_requires=['click', 'jinja2'],
     long_description=long_description,
-    long_description_content_type='text/markdown'
+    long_description_content_type='text/markdown',
+    entry_points={
+        'console_scripts': [
+            'pydoc-generate-markdown = pydocparser.generator.cli:markdown'
+        ]
+    }
 )
