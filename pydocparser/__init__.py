@@ -145,11 +145,11 @@ class ClassParser(Parser):
             self.set(member_type, inspect.getmembers(self._obj, func))
         self.set(
             'methods',
-            filter(None, [
+            list(filter(None, [
                 FunctionParser(f[1], self.full_name).start()
                 for f
                 in self.get('methods')
-            ])
+            ]))
         )
         self.set(
             'superclasses',
@@ -176,7 +176,10 @@ class FunctionParser(Parser):
 
         func_name_parts = self._obj.__qualname__.split(".")
         parent_parts = self._parent.split(".")
-        real_path = ".".join(parent_parts[0:-1] + func_name_parts)
+        if (len(func_name_parts) == 1) and (len(parent_parts) == 1):
+            real_path = ".".join(parent_parts + func_name_parts)
+        else:
+            real_path = ".".join(parent_parts[0:-1] + func_name_parts)
 
         # An inherited method
         if not real_path.startswith(self._parent):
@@ -215,10 +218,24 @@ __settings = {
 
 
 def set(key, value):
+    """
+    Set configuration options for the parsing actions
+
+    :param key: Configuration Key
+    :type key: basestring
+    :param value:
+    """
     __settings[key] = value
 
 
 def get(key):
+    """
+    Get Configuration option
+
+    :param key: Configuration Key
+    :type key: basestring
+    :return:
+    """
     if key not in __settings:
         return None
     return __settings[key]
